@@ -1,6 +1,6 @@
 from collections import UserDict
+import pickle
 from record import Record
-
 
 class AddressBook(UserDict):
 
@@ -49,7 +49,16 @@ class AddressBook(UserDict):
                 result.add(str(record))
         
         return '\n'.join([str(record) for record in result]) if len(result) > 0 else 'No results found for the query.'
+    
+    def save_to_file(self, file_path):
+        with open(file_path, "wb") as file:
+            pickle.dump(self, file)
 
+    @classmethod
+    def restore_from_file(cls, file_path):
+        with open(file_path, "rb") as file:
+            return pickle.load(file)
+        
     def __next__(self):
         if self.__current_index <= len(self.data) - 1:
             list_data = list(self.data.values())
@@ -60,8 +69,6 @@ class AddressBook(UserDict):
 
     def __iter__(self):
         return self
-        
-
 
 
 
@@ -90,4 +97,11 @@ class AddressBook(UserDict):
 # mark_record.add_birthday('21.03.2002')
 # book.add_record(mark_record)
 
+# print('*****book*****')
 # print(book.search('november'))
+
+# book.save_to_file('file33')
+
+# restored_book = AddressBook.restore_from_file('file33')
+# print('*****restored_book*****')
+# print(restored_book.search('november'))
